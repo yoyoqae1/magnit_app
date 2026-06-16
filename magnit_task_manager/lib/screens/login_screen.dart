@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import 'tasks_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,16 +39,27 @@ class _LoginScreenState
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
-      SnackBar(
-        content: Text(
-          success
-              ? "Успешный вход"
-              : "Ошибка входа",
+    if (success) {
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) =>
+              const TasksScreen(),
         ),
-      ),
-    );
+      );
+
+    } else {
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        const SnackBar(
+          content:
+              Text("Ошибка входа"),
+        ),
+      );
+
+}
   }
 
   @override
