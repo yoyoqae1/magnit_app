@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
+import 'screens/tasks_screen.dart';
 
 void main() {
   runApp(const MagnitApp());
@@ -13,7 +14,11 @@ class MagnitApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Magnit Task Manager',
-      home: const LoginScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginScreen(),
+        '/tasks': (context) => const TasksScreen(),
+      },
     );
   }
 }

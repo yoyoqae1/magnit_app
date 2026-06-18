@@ -40,15 +40,7 @@ class _LoginScreenState
     if (!mounted) return;
 
     if (success) {
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>
-              const TasksScreen(),
-        ),
-      );
-
+      Navigator.pushReplacementNamed(context, '/tasks');
     } else {
 
       ScaffoldMessenger.of(context)
