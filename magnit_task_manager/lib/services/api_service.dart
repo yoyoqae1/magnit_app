@@ -1,15 +1,33 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+
 
 class ApiService {
-  static const String baseUrl = "http://127.0.0.1:8000";
+
+  static String get baseUrl {
+    if (kIsWeb) {
+      return "http://127.0.0.1:8000";
+    }
+
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.windows:
+        return "http://127.0.0.1:8000";
+
+      case TargetPlatform.android:
+        return "http://192.168.0.125:8000";
+
+      default:
+        return "http://127.0.0.1:8000";
+    }
+  }
 
   // Токены храним в памяти (позже можно вынести в secure storage)
   static String? accessToken;
   static String? refreshToken;
   static String? userRole;
 
-  // ─── Авторизация ──────────────────────────────────────────
+  //Авторизация
 
   static Future<bool> login(String username, String password) async {
     try {
@@ -47,7 +65,7 @@ class ApiService {
     userRole = null;
   }
 
-  // ─── Задачи ───────────────────────────────────────────────
+  //Задачи
 
   static Future<List<Map<String, dynamic>>> getTasks() async {
     final response = await http.get(
@@ -62,7 +80,10 @@ class ApiService {
   }
 
   static Future<bool> createTask(
-      String title, String description, int assigneeId) async {
+    String title,
+    String description,
+    int assigneeId,
+  ) async {
     final response = await http.post(
       Uri.parse("$baseUrl/tasks"),
       headers: _authHeaders(),
@@ -84,7 +105,7 @@ class ApiService {
     return response.statusCode == 200;
   }
 
-  // ─── Пользователи ─────────────────────────────────────────
+  //Пользователи
 
   static Future<List<Map<String, dynamic>>> getUsers() async {
     final response = await http.get(
@@ -98,7 +119,7 @@ class ApiService {
     return [];
   }
 
-  // ─── Вспомогательные ──────────────────────────────────────
+  //Вспомогательные
 
   static Map<String, String> _authHeaders() {
     return {
