@@ -42,15 +42,23 @@ def create_user(
 
 @router.get("", response_model=list[UserOut])
 def list_users(
-    current_user: dict = Depends(require_role("director")),  # только директор
+    current_user: dict = Depends(require_role("director", "senior_seller")),
 ):
-    """Список всех сотрудников. Только директор."""
+    """
+    Список сотрудников.
+    Директор видит всех.
+    Старший продавец видит только продавцов (т.к. может назначать задачи только им).
+    """
     with get_db() as conn:
-        rows = conn.execute(
-            "SELECT id, username, role, is_active, created_at FROM users ORDER BY id"
-        ).fetchall()
+        if current_user["role"] == "director":
+            rows = conn.execute(
+                "SELECT id, username, role, is_active, created_at FROM users ORDER BY id"
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT id, username, role, is_active, created_at FROM users WHERE role = 'seller' ORDER BY id"
+            ).fetchall()
     return [dict(r) for r in rows]
-
 
 @router.patch("/{user_id}/deactivate", response_model=UserOut)
 def deactivate_user(

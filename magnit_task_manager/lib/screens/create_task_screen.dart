@@ -22,23 +22,54 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     loadUsers();
   }
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    descController.dispose();
+    super.dispose();
+  }
+
   Future<void> loadUsers() async {
-    final result = await ApiService.getUsers();
-    setState(() => users = result);
+    try {
+      final result = await ApiService.getUsers();
+      if (!mounted) return;
+      setState(() => users = result);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Не удалось загрузить список сотрудников: $e')),
+      );
+    }
   }
 
   Future<void> submit() async {
-    if (titleController.text.isEmpty || selectedUserId == null) return;
+    final title = titleController.text.trim();
+
+    // Дублируем минимальную проверку с бэкенда (там title >= 3 символов) —
+    // чтобы пользователь не ждал round-trip к серверу ради простой опечатки.
+    // Бэкенд всё равно остаётся источником истины и перепроверяет это сам.
+    if (title.length < 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Название минимум 3 символа")),
+      );
+      return;
+    }
+    if (selectedUserId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Выберите исполнителя")),
+      );
+      return;
+    }
 
     setState(() => loading = true);
     final ok = await ApiService.createTask(
-      titleController.text,
-      descController.text,
+      title,
+      descController.text.trim(),
       selectedUserId!,
     );
+    if (!mounted) return;
     setState(() => loading = false);
 
-    if (!mounted) return;
     if (ok) {
       Navigator.pop(context);
     } else {
