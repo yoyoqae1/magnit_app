@@ -68,7 +68,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<int>(
-              value: selectedUserId,
+              initialValue: selectedUserId,
               hint: const Text("Выберите исполнителя"),
               items: users.map((u) {
                 return DropdownMenuItem<int>(

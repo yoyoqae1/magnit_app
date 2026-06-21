@@ -51,6 +51,8 @@ class UserCreate(BaseModel):
     def password_strength(cls, v: str) -> str:
         if len(v) < 8:
             raise ValueError("Пароль минимум 8 символов")
+        if len(v.encode("utf-8")) > 72:
+            raise ValueError("Пароль слишком длинный (максимум 72 байта)")
         return v
 
     @field_validator("username")

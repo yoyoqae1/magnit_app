@@ -49,8 +49,9 @@ class _TasksScreenState extends State<TasksScreen> {
   Future<void> _changeStatus(int taskId, String current) async {
     // Определяем следующий статус
     String next;
-    if (current == 'new') next = 'in_progress';
-    else if (current == 'in_progress') next = 'done';
+    if (current == 'new') {
+      next = 'in_progress';
+    } else if (current == 'in_progress') next = 'done';
     else return; // done — менять нельзя
 
     final ok = await ApiService.updateTaskStatus(taskId, next);
