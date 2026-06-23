@@ -13,7 +13,7 @@ _BCRYPT_ROUNDS = 12
 _MAX_PASSWORD_BYTES = 72  # bcrypt физически не использует байты после 72-го
 
 
-# ─── Пароли ───────────────────────────────────────────────────
+#Пароли
 
 def hash_password(plain: str) -> str:
     password_bytes = plain.encode("utf-8")
@@ -36,7 +36,7 @@ def verify_password(plain: str, hashed: str) -> bool:
         return False
 
 
-# ─── Access Token (JWT) ────────────────────────────────────────
+#Access Token (JWT)
 
 def create_access_token(user_id: int, role: str) -> str:
     expire = datetime.now(timezone.utc) + timedelta(
@@ -60,7 +60,7 @@ def decode_access_token(token: str) -> dict:
     return payload
 
 
-# ─── Refresh Token ─────────────────────────────────────────────
+#Refresh Token
 
 def generate_refresh_token() -> tuple[str, str]:
     """Возвращает (сырой токен для клиента, хэш для БД)."""
