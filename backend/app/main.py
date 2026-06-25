@@ -12,8 +12,9 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://192.168.125.134",
-        "https://192.168.125.134",
+    "http://localhost",
+    "http://127.0.0.1",
+    "http://192.168.125.134:8000",
     ],
     allow_methods=["GET", "POST", "PATCH"],  # только нужные методы
     allow_headers=["Authorization", "Content-Type"],

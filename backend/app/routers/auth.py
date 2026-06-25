@@ -77,14 +77,14 @@ def refresh(body: RefreshRequest):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail="Токен не найден")
 
+        if expires_at < now:
+            raise 401
+
         if row["revoked"]:
-            #Токен уже использован — возможна кража, отзываем ВСЕ токены пользователя
-            conn.execute(
-                "UPDATE refresh_tokens SET revoked = 1 WHERE user_id = ?",
-                (row["user_id"],),
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Токен уже использован",
             )
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail="Токен уже использован")
 
         expires_at = datetime.fromisoformat(row["expires_at"])
         if expires_at < datetime.now(timezone.utc):

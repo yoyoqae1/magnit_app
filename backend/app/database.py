@@ -3,7 +3,10 @@ import contextlib
 from pathlib import Path
 from app.config import settings
 
-DB_PATH = Path(settings.DATABASE_URL)
+DB_PATH = settings.DATABASE_URL
+
+if DB_PATH.startswith("sqlite:///"):
+    DB_PATH = DB_PATH.replace("sqlite:///", "")
 
 
 def get_connection() -> sqlite3.Connection:
