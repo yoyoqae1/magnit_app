@@ -33,7 +33,7 @@ class ApiException implements Exception {
 class ApiService {
   ApiService._();
 
-  static const String baseUrl = "https://api.example.com";
+  static const String baseUrl = "http://37.99.221.169:8000";
   static const Duration _timeout = Duration(seconds: 10);
 
   static String? _accessToken;
@@ -265,7 +265,7 @@ class ApiService {
     }
   }
 
-  // ─── Пользователи ──────────────────────────────────────────
+  //Пользователи
 
   static Future<List<Map<String, dynamic>>> getUsers() async {
     final response = await _authorizedRequest(
