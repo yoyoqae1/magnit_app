@@ -33,7 +33,7 @@ class ApiException implements Exception {
 class ApiService {
   ApiService._();
 
-  static const String baseUrl = "http://37.99.221.169:8000";
+  static const String baseUrl = "https://api.example.com";
   static const Duration _timeout = Duration(seconds: 10);
 
   static String? _accessToken;
